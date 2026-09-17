@@ -1,9 +1,9 @@
---Временной интервал данных
+-- Временной интервал данных
 SELECT MIN(first_day_exposition) AS min_date,
 MAX(first_day_exposition) AS max_date
 FROM real_estate.advertisement;
 
---Типы населённых пунктов
+-- Типы населённых пунктов
 SELECT type,
 COUNT(id) AS ad_count,
 ROUND(COUNT(id) * 1.0 / SUM(COUNT(id)) OVER (),4) AS ad_share 
@@ -12,20 +12,20 @@ JOIN real_estate.flats USING(type_id)
 GROUP BY 1
 ORDER BY 2 DESC;
 
---Время активности объявления
+-- Время активности объявления
 SELECT MIN(days_exposition) AS min_days,
 MAX(days_exposition) AS max_days,
 AVG(days_exposition) AS avg_days,
 PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY days_exposition) AS perc_days
 FROM real_estate.advertisement;
 
---Доля снятых с публикации объявлений
+-- Доля снятых с публикации объявлений
 SELECT COUNT(days_exposition) AS real_estate_sold,
 COUNT(*) real_estate_total,
 ROUND(COUNT(days_exposition)*1.0/COUNT(*),4) AS real_estate_sold_share
 FROM real_estate.advertisement;
 
---Объявления Санкт-Петербурга
+-- Объявления Санкт-Петербурга
 SELECT COUNT(*) FILTER (WHERE city='Санкт-Петербург') AS cnt_ad_spb,
 COUNT(*) AS ad_total,
 ROUND(COUNT(*) FILTER (WHERE city='Санкт-Петербург') *1.0/ COUNT(*),4) AS ad_spb_share
@@ -33,7 +33,7 @@ FROM real_estate.advertisement
 JOIN real_estate.flats USING(id)
 JOIN real_estate.city USING(city_id);
 
---Стоимость квадратного метра
+-- Стоимость квадратного метра
 SELECT ROUND(MIN(last_price/total_area)::numeric,2) AS min_price_per_meter,
 ROUND(MAX(last_price/total_area)::numeric,2) AS max_price_per_meter,
 ROUND(AVG(last_price/total_area)::numeric,2) AS avg_price_per_meter,
@@ -41,7 +41,7 @@ PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY last_price/total_area) AS perc_price
 FROM real_estate.advertisement
 JOIN real_estate.flats USING(id);
 
---Статистические показатели
+-- Статистические показатели
 SELECT 'total_area' AS PARAMETER,
 MIN(total_area) AS min_value,
 MAX(total_area) AS max_value,
